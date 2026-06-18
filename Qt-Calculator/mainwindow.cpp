@@ -17,7 +17,6 @@ int firstNum, secondNum, result;
 
 void MainWindow::on_btnAdd_clicked()
 {
-
     firstNum=ui->txtFirstNum->text().toInt();
     secondNum=ui->txtSecondNum->text().toInt();
     result=firstNum+secondNum;
