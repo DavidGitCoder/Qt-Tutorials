@@ -10,11 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Try to open the toDoFile.txt and populate the list if it does
-    QFile file(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "\\toDoFile.txt");
+    // Try to open the toDoFile.txt and populate the list with items
+    QFile file(path);
+
     if(!file.open(QIODevice::ReadWrite)){
         QMessageBox::information(0,"error", file.errorString());
     }
+
     QTextStream in(&file);
 
     while(!in.atEnd()){
@@ -22,12 +24,29 @@ MainWindow::MainWindow(QWidget *parent)
         ui->listWidget->addItem(item);
         item->setFlags(item->flags() | Qt::ItemIsEditable);
     }
+
     file.close();
 }
 
 MainWindow::~MainWindow() // destructor
 {
+
     delete ui;
+
+    // Write to file to save list items
+    QFile file(path);
+
+    if(!file.open(QIODevice::ReadWrite)){
+        QMessageBox::information(0,"error", file.errorString());
+    }
+
+    QTextStream out(&file);
+
+    for(int i=0;i<ui->listWidget->count();++i){
+        out<<ui->listWidget->item(i)->text()<<"\n";
+    }
+
+    file.close();
 }
 
 void MainWindow::on_btnAdd_clicked()
